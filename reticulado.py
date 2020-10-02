@@ -107,7 +107,6 @@ class Reticulado(object):
             self.K[2*i.nj,2*i.ni+1]   +=elemento[2,1]
             self.K[2*i.nj+1,2*i.ni]   +=elemento[3,0]
             self.K[2*i.nj+1,2*i.ni+1] +=elemento[3,1]
-            
 
 
 
@@ -186,18 +185,31 @@ class Reticulado(object):
         q+= "Las barras conectan los nodos de la siguiente forma: \n"
         for i,b in enumerate(self.barras):
             n= b.obtener_conectividad()
-            q+= f"   {i}: [ {n[0]} <---> {n[1]} ] "
+            q+= f"   {i} : [ {n[0]} <---> {n[1]} ] "
             q+= "\n"
         q+= 2*"\n"
         
         q+= " Las restricciones del sistema son: \n"
         for i in self.restricciones:
             q+= f"{i} : {self.restricciones[i]} \n"
-        q+="\n"
+        q+=2*"\n"
         
         q+= " Las cargas sobre el sistema son: \n"
         for i in self.cargas:
             q+= f"{i} : {self.cargas[i]} \n"
-        q+="\n"
+        q+=2*"\n"
+        q+= " Los desplazamientos de los nodos son los siguientes: \n"
+        asa=0
+        for i in self.u:
+            q+=  f"{asa} : {i} \n "
+            asa+=1
+        q+=2* "\n"
+        
+        q+= " Las fuerzas que reciben las barras son: \n"
+        asa=0
+        fuerzas_barras=recuperar_fuerzas()
+        for i in fuerzas_barras:
+            q+=  f"{asa} : {i} \n "
+            asa+=1
         
         return q
