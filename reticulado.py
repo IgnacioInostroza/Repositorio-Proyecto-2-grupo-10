@@ -84,26 +84,26 @@ class Reticulado(object):
         for i in self.barras:
             elemento=obtener_rigidez(i)      # metodo arcaico y poco optimizado pero sencillo para digerir
             
-            self.K[2*i.ni,2*i.ni]       +=elemento[0,0]     #zona barras nodo 1 nodo 1
+            self.K[2*i.ni,2*i.ni]       +=elemento[0,0]     #zona barras nodo 1 a nodo 1
             self.K[2*i.ni,2*i.ni+1]     +=elemento[0,1]
             self.K[2*i.ni+1,2*i.ni]     +=elemento[1,0]
             self.K[2*i.ni+1,2*i.ni+1]   +=elemento[1,1]
             
             
-            self.K[2*i.nj,2*i.nj]       +=elemento[2,2]    #zona barras nodo 2 nodo 2
+            self.K[2*i.nj,2*i.nj]       +=elemento[2,2]    #zona barras nodo 2 a nodo 2
             self.K[2*i.nj,2*i.nj+1]     +=elemento[2,3]
             self.K[2*i.nj+1,2*i.nj]     +=elemento[3,2]
             self.K[2*i.nj+1,2*i.nj+1]   +=elemento[3,3]
             
             
             
-            self.K[2*i.ni,2*i.nj]     +=elemento[0,2]       #zona barras nodo 1 nodo 2
+            self.K[2*i.ni,2*i.nj]     +=elemento[0,2]       #zona barras nodo 1 a nodo 2
             self.K[2*i.ni,2*i.nj+1]   +=elemento[0,3]
             self.K[2*i.ni+1,2*i.nj]   +=elemento[1,2]
             self.K[2*i.ni+1,2*i.nj+1] +=elemento[1,3]
             
 
-            self.K[2*i.nj,2*i.ni]     +=elemento[2,0]      #zona barras nodo 2 nodo 1
+            self.K[2*i.nj,2*i.ni]     +=elemento[2,0]      #zona barras nodo 2 a nodo 1
             self.K[2*i.nj,2*i.ni+1]   +=elemento[2,1]
             self.K[2*i.nj+1,2*i.ni]   +=elemento[3,0]
             self.K[2*i.nj+1,2*i.ni+1] +=elemento[3,1]
