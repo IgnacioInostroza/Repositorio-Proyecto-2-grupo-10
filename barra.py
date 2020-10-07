@@ -1,5 +1,4 @@
 import numpy as np
-import math
 
 g = 9.81 #kg*m/s^2
 
@@ -26,67 +25,97 @@ class Barra(object):
 
     def calcular_largo(self, reticulado):
         """Devuelve el largo de la barra. 
-        ret: instancia de objeto tipo reticulado
+        xi : Arreglo numpy de dimenson (3,) con coordenadas del nodo i
+        xj : Arreglo numpy de dimenson (3,) con coordenadas del nodo j
         """
         xi = reticulado.obtener_coordenada_nodal(self.ni)
         xj = reticulado.obtener_coordenada_nodal(self.nj)
         dij = xi-xj
         return np.sqrt(np.dot(dij,dij))
-    
 
     def calcular_peso(self, reticulado):
         """Devuelve el largo de la barra. 
-        ret: instancia de objeto tipo reticulado
+        xi : Arreglo numpy de dimenson (3,) con coordenadas del nodo i
+        xj : Arreglo numpy de dimenson (3,) con coordenadas del nodo j
         """
         L = self.calcular_largo(reticulado)
         A = self.calcular_area()
         return self.ρ * A * L * g
 
 
+
+
+
+
+
+
+
+
+
     def obtener_rigidez(self, ret):
-        """Devuelve la rigidez ke del elemento. Arreglo numpy de (4x4)
-        ret: instancia de objeto tipo reticulado
-        """
+        A = self.calcular_area()
         L = self.calcular_largo(ret)
-        A = self.calcular_area(ret)
-        k = self.E * A / L
-        
+
         xi = ret.obtener_coordenada_nodal(self.ni)
         xj = ret.obtener_coordenada_nodal(self.nj)
-        
-        x1 = xi[0]
-        y1 = xi[1]
-        x2 = xj[0]
-        y2 = xj[1]
-        
-        x = x2 - x1
-        y = y2 - y1
-        
-        thetha = math.atan2(y, x) * (180.0 / math.pi)   #Angulo en grados
-        
-        T0 = [-math.cos(thetha), -math.sin(thetha), math.cos(thetha), math.sin(thetha)]
-        ke = T0.T @ T0 * k
 
-        return ke
+        cosθ = (xj[0] - xi[0])/L
+        sinθ = (xj[1] - xi[1])/L
+
+        Tθ = np.array([ -cosθ, -sinθ, cosθ, sinθ ]).reshape((4,1))
+
+        return self.E * A / L * (Tθ @ Tθ.T )
 
     def obtener_vector_de_cargas(self, ret):
-        """Devuelve el vector de cargas nodales fe del elemento. Vector numpy de (4x1)
-        ret: instancia de objeto tipo reticulado
-        """
-        P = self.calcular_peso(ret)
-        fy = np.array([0, -1, 0, -1])
-        fe = fy.T * P/2 
-        
-        return fe
+        W = self.calcular_peso(ret)
+
+        return np.array([0, -W, 0, -W])
 
 
     def obtener_fuerza(self, ret):
-        """Devuelve la fuerza se que debe resistir la barra. Un escalar tipo double. 
-        ret: instancia de objeto tipo reticulado
-        """
+        ue = np.zeros(4)
+        ue[0:2] = ret.obtener_desplazamiento_nodal(self.ni)
+        ue[2:] = ret.obtener_desplazamiento_nodal(self.nj)
+        
+        A = self.calcular_area()
         L = self.calcular_largo(ret)
-        A = self.calcular_area(ret)
-        D = ret.obtener_desplazamiento_nodal(ret)
-        se = A * self.E / L*D
 
-        return se
+        xi = ret.obtener_coordenada_nodal(self.ni)
+        xj = ret.obtener_coordenada_nodal(self.nj)
+
+        cosθ = (xj[0] - xi[0])/L
+        sinθ = (xj[1] - xi[1])/L
+
+        Tθ = np.array([ -cosθ, -sinθ, cosθ, sinθ ]).reshape((4,1))
+
+        return self.E * A / L * (Tθ.T @ ue)
+
+
+
+
+
+    def chequear_diseño(self, Fu, ϕ=0.9):
+        """Para la fuerza Fu (proveniente de una combinacion de cargas)
+        revisar si esta barra cumple las disposiciones de diseño.
+        """
+        return False
+
+
+    def obtener_factor_utilizacion(self, Fu, ϕ=0.9):
+        """Para la fuerza Fu (proveniente de una combinacion de cargas)
+        calcular y devolver el factor de utilización
+        """
+        FU = 0. 
+
+        return FU
+
+
+    def rediseñar(self, Fu, ret, ϕ=0.9):
+        """Para la fuerza Fu (proveniente de una combinacion de cargas)
+        re-calcular el radio y el espesor de la barra de modo que
+        se cumplan las disposiciones de diseño lo más cerca posible
+        a FU = 1.0.
+        """
+        self.R = 0.9*self.R   #cambiar y poner logica de diseño
+        self.t = 0.9*self.t   #cambiar y poner logica de diseño
+        return None
