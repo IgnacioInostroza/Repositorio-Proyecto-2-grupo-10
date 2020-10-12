@@ -1,5 +1,5 @@
 import numpy as np
-
+from scipy import optimize
 g = 9.81 #kg*m/s^2
 
 
@@ -59,10 +59,11 @@ class Barra(object):
         xi = ret.obtener_coordenada_nodal(self.ni)
         xj = ret.obtener_coordenada_nodal(self.nj)
 
-        cosθ = (xj[0] - xi[0])/L
-        sinθ = (xj[1] - xi[1])/L
+        cosθx = (xj[0] - xi[0])/L
+        cosθy = (xj[1] - xi[1])/L
+        cosθz = (xj[2] - xi[2])/L
 
-        Tθ = np.array([ -cosθ, -sinθ, cosθ, sinθ ]).reshape((4,1))
+        Tθ = np.array([ -cosθx, -cosθy, cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
 
         return self.E * A / L * (Tθ @ Tθ.T )
 
@@ -83,10 +84,11 @@ class Barra(object):
         xi = ret.obtener_coordenada_nodal(self.ni)
         xj = ret.obtener_coordenada_nodal(self.nj)
 
-        cosθ = (xj[0] - xi[0])/L
-        sinθ = (xj[1] - xi[1])/L
+        cosθx = (xj[0] - xi[0])/L
+        cosθy = (xj[1] - xi[1])/L
+        cosθz = (xj[2] - xi[2])/L
 
-        Tθ = np.array([ -cosθ, -sinθ, cosθ, sinθ ]).reshape((4,1))
+        Tθ = np.array([ -cosθx, -cosθy, cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
 
         return self.E * A / L * (Tθ.T @ ue)
 
@@ -94,28 +96,38 @@ class Barra(object):
 
 
 
-    def chequear_diseño(self, Fu, ϕ=0.9):
+    def chequear_diseño(self, Fu, ret, ϕ=0.9):
         """Para la fuerza Fu (proveniente de una combinacion de cargas)
         revisar si esta barra cumple las disposiciones de diseño.
         """
-        return False
+        if abs(Fu) <=abs( ϕ* ret.σy * ret.calcular_area()):
+            return True
+        else:
+            return False
 
 
     def obtener_factor_utilizacion(self, Fu, ϕ=0.9):
         """Para la fuerza Fu (proveniente de una combinacion de cargas)
         calcular y devolver el factor de utilización
         """
-        FU = 0. 
-
+        FU =abs( Fu/ (ϕ* self.σy * self.calcular_area()))
         return FU
 
-
+    def funcion_optimizadora(self,x,Fu, ϕ=0.9):
+         """funcion fx para que busca igualar la fuerza entregada
+         y la fuerza de resistencia maxima = σy*A(r) * ϕ"""
+         
+         return (abs(Fu - (self.σy*np.pi*(x**2) - np.pi*((x-self.t)**2))*ϕ))
+    
     def rediseñar(self, Fu, ret, ϕ=0.9):
         """Para la fuerza Fu (proveniente de una combinacion de cargas)
         re-calcular el radio y el espesor de la barra de modo que
         se cumplan las disposiciones de diseño lo más cerca posible
         a FU = 1.0.
         """
-        self.R = 0.9*self.R   #cambiar y poner logica de diseño
-        self.t = 0.9*self.t   #cambiar y poner logica de diseño
+        
+        self.R= optimize.minimize(funcion_optimizadora, (1), method='BFGS').x
         return None
+
+
+
