@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct  9 12:50:15 2020
+
+@author: ignacio
+"""
+
 import numpy as np
 from scipy.linalg import solve
 
@@ -87,14 +94,19 @@ class Reticulado(object):
 
 
                #MDR
-               d = [2*ni, 2*ni+1 , 2*nj, 2*nj+1]
-
-               for i in range(4):
+               if self.Ndimensiones == 2:
+                   d = [2*ni, 2*ni+1 , 2*nj, 2*nj+1]
+                   
+               else:
+                   d = [3*ni, 3*ni+1 , 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
+                   
+               for i in range(self.Ndimensiones*2):
                     p = d[i]
-                    for j in range(4):
+                    for j in range(self.Ndimensiones*2):
                          q = d[j]
                          self.K[p,q] += ke[i,j]
                     self.f[p] = fe[i]
+
 
 
 
@@ -114,7 +126,7 @@ class Reticulado(object):
                     gdl = restriccion[0]
                     valor = restriccion[1]
 
-                    gdl_global = 2*nodo + gdl
+                    gdl_global = self.Ndimensiones*nodo + gdl
                     self.u[gdl_global] = valor
 
                     gdl_restringidos.append(gdl_global)
@@ -129,7 +141,7 @@ class Reticulado(object):
                     gdl = carga[0]
                     valor = carga[1]
 
-                    gdl_global = 2*nodo + gdl
+                    gdl_global = self.Ndimensiones*nodo + gdl
                     self.f[gdl_global] = valor
 
 
@@ -155,8 +167,14 @@ class Reticulado(object):
           self.has_solution = True
 
      def obtener_desplazamiento_nodal(self, n):
-          dofs = [2*n, 2*n+1]
-          return self.u[dofs]
+         if self.Ndimensiones == 2:
+             dofs = [2*n, 2*n+1]
+         if self.Ndimensiones == 3:
+             dofs = [3*n, 3*n+1, 3*n+2]
+         else:
+             print("Error")
+             
+         return self.u[dofs]
 
 
      def recuperar_fuerzas(self):
