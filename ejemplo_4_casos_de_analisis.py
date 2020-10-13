@@ -103,7 +103,6 @@ plt.title("FU caso 1: 1.4 D ")
 plt.show()
 
 
-
 ver_reticulado_3d(ret_D, 
     opciones_nodos = {
         "usar_posicion_deformada": True,
@@ -124,6 +123,6 @@ plt.title("FU caso 2: 1.2 D + 1.6 L")
 plt.show()
 
 
-Fu = #definir
+Fu =1  #definir
 
 ret_D.rediseñar(Fu)

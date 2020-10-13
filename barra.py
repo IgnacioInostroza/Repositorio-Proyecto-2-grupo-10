@@ -114,21 +114,30 @@ class Barra(object):
         FU =abs( Fu/ (ϕ* self.σy * self.calcular_area()))
         return FU
 
-    def funcion_optimizadora(self,x,Fu, ϕ=0.9):
-         print(1)
-         """funcion fx para que busca igualar la fuerza entregada
-         y la fuerza de resistencia maxima = σy*A(r) * ϕ"""
-         
-         return (abs(Fu - (self.σy * np.pi*(x**2)) *ϕ))
+
     
-    def rediseñar(self, Fu, ret, ϕ=0.9):
+    def rediseñar(self, Fu, ϕ=0.9):
         """Para la fuerza Fu (proveniente de una combinacion de cargas)
         re-calcular el radio y el espesor de la barra de modo que
         se cumplan las disposiciones de diseño lo más cerca posible
         a FU = 1.0.
         """
-        
-        self.R = self.t= optimize.minimize(funcion_optimizadora, (1,1), method='BFGS').x
+        if abs(Fu)<1:
+            self.R = self.t=0.01
+            print ("error")
+            return None
+        def funcion_optimizadora(x):
+            """funcion fx para que busca igualar la fuerza entregada
+             y la fuerza de resistencia maxima = σy*A(r) * ϕ"""
+            return abs(abs(Fu )- (self.σy * np.pi*(x**2)) *ϕ)
+        def restriccion_de_pandeo(x):
+            pass
+        bnd_x=(0., None)
+        if Fu <0:
+            self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(100), method='L-BFGS-B',bounds=[bnd_x]).x
+            print (self.R)
+        else:
+            self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(100), method='L-BFGS-B',bounds=[bnd_x]).x
+            print (self.R)
         return None
-
 
