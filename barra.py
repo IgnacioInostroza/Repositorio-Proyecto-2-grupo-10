@@ -122,9 +122,9 @@ class Barra(object):
         se cumplan las disposiciones de diseño lo más cerca posible
         a FU = 1.0.
         """
-        if abs(Fu)<1:
+        if abs(Fu)<10:
             self.R = self.t=0.01
-            print ("error")
+            print ("Fuerza despreciable, min aceptado")
             return None
         def funcion_optimizadora(x):
             """funcion fx para que busca igualar la fuerza entregada
