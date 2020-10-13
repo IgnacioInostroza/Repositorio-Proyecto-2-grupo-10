@@ -122,8 +122,10 @@ ver_reticulado_3d(ret,
 
 barras_a_rediseñar = [3,4,5, 9, 10, 11]
 barras = ret.obtener_barras()
+a=0
 for i in barras_a_rediseñar:
-	barras[i].rediseñar(f[i])
+    barras[i].rediseñar(f[i],3)
+    a+=1
 
 
 
