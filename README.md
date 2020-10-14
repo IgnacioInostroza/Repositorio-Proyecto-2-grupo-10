@@ -18,7 +18,7 @@ la función de rediseño de la barra se basa en el es el sistema de optimizació
 
 Esta función busca minimizar la diferencia entre el valor de la fuerza ejercida en la barra y la fuerza máxima que esta puede ejercer en su rango elástico, multiplicado por un factor de minoración de 0.9
 Cuando la fuerza entregada es de compresión además se toma en cuenta la restricción del pandeo, donde la barra debe presentar un área (e inercia) suficiente para no ser afectada por una falla de pandeo. 
-Al encontrar el valor de radio que iguale el valor de fuerza entregada se actualiza el valor de este. Se decidió que el radio mínimo  de cada barra no puede ser inferior a 1 cm.
+Al encontrar el valor de radio que iguale el valor de fuerza entregada se actualiza el valor de este. Se decidió que el radio mínimo  de cada barra no puede ser inferior a 1 mm.
 
 
 En relación a la nueva distribución de FU, para mejorar aún más el costo o peso de la estructura, sería necesaria la implementación de una función que optimiza automáticamente la sección transversal de las barras que tienen un FU menor, o bien quitar aquellas que no aporten significativamente al reticulado.
