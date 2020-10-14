@@ -91,7 +91,7 @@ class Barra(object):
 
         Tθ = np.array([ -cosθx, -cosθy, cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
 
-        return self.E * A / L * (Tθ.T @ ue)
+        return self.E * A / L * (Tθ. T@ ue)
 
 
 
@@ -124,20 +124,30 @@ class Barra(object):
         """
         if abs(Fu)<10:
             self.R = self.t=0.01
-            print ("Fuerza despreciable, min aceptado")
             return None
         def funcion_optimizadora(x):
             """funcion fx para que busca igualar la fuerza entregada
              y la fuerza de resistencia maxima = σy*A(r) * ϕ"""
-            return abs(abs(Fu )- (self.σy * np.pi*(x**2)) *ϕ)
+            return abs(abs(Fu)- (self.σy * np.pi*(x**2)) *ϕ)
+        
         def restriccion_de_pandeo(x):
-            pass
-        bnd_x=(0., None)
+            if abs(self.ni-self.nj)==1:
+                Largo=5
+            elif abs(self.ni-self.nj)==7:
+                Largo=2
+            elif abs(self.ni-self.nj) ==8 or abs(self.ni-self.nj)==6:
+                Largo =np.sqrt(2**2+5**2)
+            else:
+                Largo = np.sqrt(1**2+2.5**2+3.5**2)
+            return np.pi**2 *self.E * x**4 * np.pi/4*Largo**2 -Fu
+        
+        
+                    
+        restriccion = dict(type='ineq', fun=restriccion_de_pandeo)
+        bnd_x=(0.01, None)
         if Fu <0:
-            self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(100), method='L-BFGS-B',bounds=[bnd_x]).x
-            print (self.R)
+            self.R = self.t=  optimize.minimize(funcion_optimizadora,np.array(-1) , method='SLSQP',bounds=[bnd_x], constraints=restriccion).x
         else:
             self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(100), method='L-BFGS-B',bounds=[bnd_x]).x
-            print (self.R)
         return None
 
