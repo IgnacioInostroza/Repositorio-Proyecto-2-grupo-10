@@ -122,9 +122,10 @@ class Barra(object):
         se cumplan las disposiciones de diseño lo más cerca posible
         a FU = 1.0.
         """
+        MIN= 0.001
         if abs(Fu)<10:
-            self.R = self.t=0.01
-            return None
+            self.R = self.t=MIN
+            return self.R
         def funcion_optimizadora(x):
             """funcion fx para que busca igualar la fuerza entregada
              y la fuerza de resistencia maxima = σy*A(r) * ϕ"""
@@ -144,10 +145,10 @@ class Barra(object):
         
                     
         restriccion = dict(type='ineq', fun=restriccion_de_pandeo)
-        bnd_x=(0.01, None)
+        bnd_x=(MIN, None)
         if Fu <0:
-            self.R = self.t=  optimize.minimize(funcion_optimizadora,np.array(-1) , method='SLSQP',bounds=[bnd_x], constraints=restriccion).x
+            self.R = self.t=  optimize.minimize(funcion_optimizadora,np.array(0) , method='SLSQP',bounds=[bnd_x], constraints=restriccion).x
         else:
-            self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(100), method='L-BFGS-B',bounds=[bnd_x]).x
-        return None
+            self.R = self.t=  optimize.minimize(funcion_optimizadora, np.array(0), method='L-BFGS-B',bounds=[bnd_x]).x
+        return self.R
 

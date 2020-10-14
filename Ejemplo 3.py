@@ -136,6 +136,7 @@ ver_reticulado_3d(ret,
     })
 
 
+
 barras = ret.obtener_barras()
 barras_a_rediseñar = range(len(barras))
 for i in barras_a_rediseñar:

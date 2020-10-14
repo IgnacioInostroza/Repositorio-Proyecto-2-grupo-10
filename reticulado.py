@@ -247,5 +247,4 @@ class Reticulado(object):
                     s += f"  {b} : {f[b]}\n"
           s += "\n"
           s += f"Ndimensiones = {self.Ndimensiones}"
-
           return s
