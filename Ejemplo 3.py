@@ -156,7 +156,7 @@ fu1 = ret.recuperar_factores_de_utilizacion(f)
 peso2 = ret.calcular_peso_total()
 
 print(f"peso 2 = {peso2}")
-print (f"Diferencia de peso = {(peso1- peso2)/1000} Ton")
+print (f"Diferencia de peso = {abs((peso1- peso2)/1000)} Ton")
 
 ver_reticulado_3d(ret, 
     opciones_nodos = {
