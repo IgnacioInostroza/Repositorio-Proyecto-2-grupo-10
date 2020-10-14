@@ -23,3 +23,7 @@ Al encontrar el valor de radio que iguale el valor de fuerza entregada se actual
 
 En relación a la nueva distribución de FU, para mejorar aún más el costo o peso de la estructura, sería necesaria la implementación de una función que optimiza automáticamente la sección transversal de las barras que tienen un FU menor, o bien quitar aquellas que no aporten significativamente al reticulado.
 
+![imagen1](https://raw.githubusercontent.com/TomasSchilling/Repositorio-Proyecto-2-grupo-10/main/Figure_6.png)
+![imagen2](https://raw.githubusercontent.com/TomasSchilling/Repositorio-Proyecto-2-grupo-10/main/Figure_7.png)
+![imagen3](https://raw.githubusercontent.com/TomasSchilling/Repositorio-Proyecto-2-grupo-10/main/Figure_8.png)
+![imagen4](https://raw.githubusercontent.com/TomasSchilling/Repositorio-Proyecto-2-grupo-10/main/Figure_9.png)
